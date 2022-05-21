@@ -12,12 +12,9 @@ repositories {
 	mavenCentral()
 }
 
-// object DependencyVersions {
-// 	const val TESTCONTAINERS_VERSION = "1.16.2"
-// }
-
-extra.set("testcontainersVersion", "1.16.2")
-
+object DependencyVersions {
+	const val TESTCONTAINERS_VERSION = "1.16.2"
+}
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -34,8 +31,7 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		// mavenBom("org.testcontainers:testcontainers-bom:${DependencyVersions.TESTCONTAINERS_VERSION}")
-		mavenBom("org.testcontainers:testcontainers-bom:${rootProject.extra.get("kotlinVersion")}")
+		mavenBom("org.testcontainers:testcontainers-bom:${DependencyVersions.TESTCONTAINERS_VERSION}")
 	}
 }
 

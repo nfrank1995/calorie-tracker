@@ -28,6 +28,8 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mongodb")
 	testImplementation("org.testcontainers:postgresql")
+	compileOnly("org.projectlombok:lombok:1.18.24")
+
 }
 
 dependencyManagement {

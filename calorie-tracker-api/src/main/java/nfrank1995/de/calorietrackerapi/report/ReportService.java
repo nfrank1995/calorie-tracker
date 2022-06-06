@@ -55,6 +55,8 @@ public class ReportService {
 
         System.out.println(report);
 
-        return reportRepository.save(report);
+        Report savedReport= reportRepository.save(report);
+
+        return savedReport;
     }
 }

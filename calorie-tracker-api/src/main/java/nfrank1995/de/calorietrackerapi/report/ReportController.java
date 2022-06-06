@@ -1,11 +1,6 @@
 package nfrank1995.de.calorietrackerapi.report;
 
-import java.time.LocalDate;
-
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,20 +15,12 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    @GetMapping("/createtest")
-    Report test(){
-        System.out.println("Test");
-       return reportService.createTest();
+    @GetMapping(value="/createtest", produces = "application/json")
+    public Report test(){
+        Report savedReport = reportService.createTest();
+        System.out.println(savedReport);
+       return savedReport;
     }
 
-    // @GetMapping("/{date}")
-    // Report byDate(@PathVariable LocalDate date){
-    //     return reportService.getByDate(date);
-    // }
-
-    @PostMapping
-    Report createOrUpdate(@RequestBody Report report){
-        return reportService.createOrUpdate(report);
-    }
     
 }

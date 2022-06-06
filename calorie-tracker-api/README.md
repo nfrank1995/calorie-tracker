@@ -8,7 +8,7 @@ To run the application you need a runnin ginstance of mongodb. When using docker
 docker-compose up -d
 ```
 
-command in the calorie-tracker-api folder.
+command in the calorie-tracker-api folder. Running the docker-compose.yml file will start a mongodb instance on port:27017 and start mongo-express on port:8081. When opening http://localhost:8081/ you'll be asked to enter a username and password. The defaut values in the docker-compose.yml are username: admin, and password:admin123.
 
 ### Creating a database user
 to interact with the mongodb instance you have to create a database and a database user the application can use. To create a database log into your mongodb instance and run the use command

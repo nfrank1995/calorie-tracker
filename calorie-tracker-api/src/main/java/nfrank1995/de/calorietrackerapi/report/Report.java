@@ -25,10 +25,11 @@ import lombok.ToString;
 @ToString
 @Document("reports")
 public class Report {
+
     @Id
     UUID id;
 
-	@JsonFormat(pattern="dd MMM yyyy")
+	@JsonFormat(pattern="dd.MM.yyyy")
 	@JsonSerialize(using = LocalDateSerializer.class)
     LocalDate date;
 

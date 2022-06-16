@@ -24,7 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Document("reports")
-public class Report {
+class Report {
 
     @Id
     UUID id;

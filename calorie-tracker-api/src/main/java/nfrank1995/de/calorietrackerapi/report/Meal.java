@@ -12,6 +12,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Meal {
+class Meal {
     List<CalorieEntry> entries;
 }

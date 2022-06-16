@@ -1,7 +1,7 @@
 package nfrank1995.de.calorietrackerapi.report;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -9,7 +9,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import io.micrometer.core.instrument.internal.TimedExecutor;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceTest {
@@ -75,16 +75,38 @@ public class ReportServiceTest {
 
     @Test
     @DisplayName("Test updateReport Success")
-    void updateReport(){
+    void updateReport_ReportWithIdExists_ReturnsUpdatedReport(){
         // arrange
-        Report report = new Report();
-        when(repository.save(any(Report.class))).thenAnswer(i -> i.getArguments()[0]);
+        UUID id = UUID.randomUUID();
+        Report reportToUpdate = new Report();
+        Report requestedReport = new Report();
+        when(repository.findById(id)).thenReturn(Optional.of(reportToUpdate));
+        when(repository.save(reportToUpdate)).thenAnswer(i -> i.getArguments()[0]);
 
         // act
-        Report result = reportService.updateReport(report);
+        Report result = reportService.updateReport(id, requestedReport);
 
         // assert
-        assertEquals(report, result);
-        verify(repository, times(1)).save(report);
+        assertEquals(reportToUpdate, result);
+        verify(repository, times(1)).findById(id);
+        verify(repository, times(1)).save(reportToUpdate);
+    }
+
+    @Test
+    @DisplayName("Test updateReport No Report With id")
+    void updateReport_NoReportWithId_ThrowsNoSuch(){
+        // arrange
+        UUID id = UUID.randomUUID();
+        String expectedErrorMessage = "Report with Id " + id.toString() + " doesn't exist.";
+        Report requestedReport = new Report();
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        // act
+        Exception ex = assertThrows(NoSuchElementException.class, () -> {
+            reportService.updateReport(id, requestedReport);
+        });
+
+        // assert
+        assertEquals(ex.getMessage(), expectedErrorMessage);
     }
 }

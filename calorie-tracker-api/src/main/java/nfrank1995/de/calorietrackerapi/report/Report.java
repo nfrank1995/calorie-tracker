@@ -8,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
@@ -29,7 +28,7 @@ class Report {
     @Id
     UUID id;
 
-	@JsonFormat(pattern="dd.MM.yyyy")
+    @JsonFormat(pattern="yyyy-MM-dd")
 	@JsonSerialize(using = LocalDateSerializer.class)
     LocalDate date;
 

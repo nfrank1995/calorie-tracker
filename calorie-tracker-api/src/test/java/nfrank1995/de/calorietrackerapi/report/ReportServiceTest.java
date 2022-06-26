@@ -1,7 +1,7 @@
 package nfrank1995.de.calorietrackerapi.report;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -13,12 +13,15 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.xml.stream.XMLOutputFactory;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceTest {
@@ -27,7 +30,7 @@ public class ReportServiceTest {
     ReportRepository repository;
 
     ReportService reportService;
-
+    
     @BeforeEach
     void setup(){
         reportService = new ReportServiceImpl(repository);
@@ -37,6 +40,7 @@ public class ReportServiceTest {
     @Test
     @DisplayName("Test getReportForDate no report with date present")
     void getReportForDate_NoReportWithDate_CreatesNewReport(){
+        
         // arrange
         when(repository.findByDate(any(LocalDate.class))).thenReturn(Optional.empty());
         when(repository.save(any(Report.class))).thenAnswer(i -> i.getArguments()[0]);

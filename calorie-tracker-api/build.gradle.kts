@@ -13,12 +13,10 @@ repositories {
 }
 
 object DependencyVersions {
-	const val TESTCONTAINERS_VERSION = "1.16.2"
 	const val LOMBOK_VERSION = "1.18.4"
 }
 
 dependencies {
-
     compileOnly("org.projectlombok:lombok:${DependencyVersions.LOMBOK_VERSION}")
     testCompileOnly("org.projectlombok:lombok:${DependencyVersions.LOMBOK_VERSION}")
     annotationProcessor("org.projectlombok:lombok:${DependencyVersions.LOMBOK_VERSION}")
@@ -26,27 +24,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0")
 	implementation("org.springdoc:springdoc-openapi-ui:1.6.8")
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
-	testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("org.testcontainers:mongodb")
-	testImplementation("org.testcontainers:postgresql")
-
+testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.3.2")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0-M1")
 
 }
 
-dependencyManagement {
-	imports {
-		mavenBom("org.testcontainers:testcontainers-bom:${DependencyVersions.TESTCONTAINERS_VERSION}")
-	}
-}
-
-tasks.test {
-	useJUnitPlatform()
+tasks.test{
+    useJUnitPlatform()
 }

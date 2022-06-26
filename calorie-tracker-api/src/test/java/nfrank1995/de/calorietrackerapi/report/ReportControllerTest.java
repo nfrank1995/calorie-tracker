@@ -1,6 +1,8 @@
 package nfrank1995.de.calorietrackerapi.report;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,8 +42,8 @@ public class ReportControllerTest {
 
     @Test
     void getByDateEndpoint_ValidDate_ReturnsReportFromReportService() throws Exception {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String testDateAsString = "23-11-1995";
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String testDateAsString = "1995-11-23";
         LocalDate testDate = LocalDate.parse(testDateAsString, dateFormatter);
         Report testReport = new Report();
         testReport.setDate(testDate);
@@ -51,7 +54,7 @@ public class ReportControllerTest {
         this.mockMvc.perform(get("/reports/{date}",testDateAsString))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.date").value("23.11.1995"));
+        .andExpect(jsonPath("$.date").value(testDateAsString));
 
         
         verify(reportService, times(1)).getReportForDate(testDate);
@@ -60,8 +63,9 @@ public class ReportControllerTest {
 
     @Test
     void updateByIDEndpoint_ValidId_ReturnsUpdatedReport() throws Exception {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String testDateAsString = "23-11-1995";
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String testDateAsString = "1995-11-23";
         LocalDate testDate = LocalDate.parse(testDateAsString, dateFormatter);
 
         UUID id = UUID.randomUUID();
@@ -88,7 +92,12 @@ public class ReportControllerTest {
         testReport.setId(id);
         testReport.setMeals(meals);
 
-        when(reportService.getReportForDate(testDate)).thenReturn(testReport);
+
+        UUID resultId = UUID.randomUUID();
+        Report reportToReturn = new Report();
+        reportToReturn.setId(resultId);
+
+        when(reportService.updateReport(eq(id), any(Report.class))).thenReturn(reportToReturn);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -96,13 +105,44 @@ public class ReportControllerTest {
 
         MockHttpServletRequestBuilder builder =
         MockMvcRequestBuilders.put("/reports/{id}",id.toString())
-                              .characterEncoding("UTF-8")
-                              .content(testReportJsonString);
+                            .characterEncoding("UTF-8")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(testReportJsonString);
 
 
         this.mockMvc.perform(builder)
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.date").value("23.11.1995"));
+        .andExpect(jsonPath("$.id").value(resultId.toString()));
+
+        verify(reportService, times(1)).updateReport(eq(id), any(Report.class));
+    }
+
+    @Test
+    void updateByIDEndpoint_NoReportWithId_Returns404() throws Exception {
+        UUID id = UUID.randomUUID();
+        String errorMessage = "404";
+        NoSuchElementException exceptionToThrow = new NoSuchElementException(errorMessage);
+
+        Report testReport = new Report();
+
+        when(reportService.updateReport(eq(id), any(Report.class))).thenThrow(exceptionToThrow);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String testReportJsonString = objectMapper.writeValueAsString(testReport);
+
+        MockHttpServletRequestBuilder builder =
+        MockMvcRequestBuilders.put("/reports/{id}",id.toString())
+                            .characterEncoding("UTF-8")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(testReportJsonString);
+
+
+        this.mockMvc.perform(builder)
+        .andDo(print())
+        .andExpect(status().isNotFound());
+
+        verify(reportService, times(1)).updateReport(eq(id), any(Report.class));
     }
 }

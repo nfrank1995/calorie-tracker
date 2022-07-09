@@ -13,7 +13,7 @@ repositories {
 }
 
 object DependencyVersions {
-	const val LOMBOK_VERSION = "1.18.4"
+	const val LOMBOK_VERSION = "1.18.24"
 }
 
 dependencies {
@@ -24,12 +24,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springdoc:springdoc-openapi-ui:1.6.8")
+	implementation("org.springdoc:springdoc-openapi-ui:1.6.9")
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
-testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.3.2")
+	testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.6")
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0-M1")
 
 }

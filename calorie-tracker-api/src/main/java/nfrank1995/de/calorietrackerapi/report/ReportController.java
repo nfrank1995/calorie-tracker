@@ -33,7 +33,7 @@ public class ReportController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Report> updateReportWithId(@PathVariable UUID id, @RequestBody Report report) {
+    public ResponseEntity<Report> updateReportWithId(@PathVariable String id, @RequestBody Report report) {
         try{
             Report updatedReport = reportService.updateReport(id, report);
             return ResponseEntity.ok(updatedReport);

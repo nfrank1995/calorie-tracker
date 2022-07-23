@@ -9,9 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import javax.xml.stream.XMLOutputFactory;
 
@@ -19,6 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +29,9 @@ public class ReportServiceTest {
     @Mock
     ReportRepository repository;
 
+    @Captor
+    ArgumentCaptor<Report> reportCaptor;
+
     ReportService reportService;
     
     @BeforeEach
@@ -36,30 +39,30 @@ public class ReportServiceTest {
         reportService = new ReportServiceImpl(repository);
     }
 
-
     @Test
-    @DisplayName("Test getReportForDate no report with date present")
-    void getReportForDate_NoReportWithDate_CreatesNewReport(){
-        
+    @DisplayName("Test getReportForDate creates report with date if no report with date is present")
+    void getReportForDate_NoReportWithDate_CreatesNewReportWithDate() {
         // arrange
-        when(repository.findByDate(any(LocalDate.class))).thenReturn(Optional.empty());
-        when(repository.save(any(Report.class))).thenAnswer(i -> i.getArguments()[0]);
-
         LocalDate date = LocalDate.now();
         Report report = new Report();
         report.setDate(date);
+
+        when(repository.findByDate(date)).thenReturn(Optional.empty());
+        when(repository.save(any(Report.class))).thenReturn(report);
 
         // act
         Report result = reportService.getReportForDate(date);
 
         // assert
         verify(repository, times(1)).findByDate(date);
-        verify(repository, times(1)).save(any());
+        verify(repository, times(1)).save(reportCaptor.capture());
+
         assertEquals(date, result.getDate());
+        assertEquals(date,reportCaptor.getValue().getDate());
     }
 
     @Test
-    @DisplayName("Test getReportForDate return Report with Date")
+    @DisplayName("Test getReportForDate return Report with Date is report with date is present")
     void  getReportForDate_ReportWithDateExists_ReturnReport(){
         // arrange
         LocalDate date = LocalDate.now();
@@ -81,9 +84,13 @@ public class ReportServiceTest {
     @DisplayName("Test updateReport Success")
     void updateReport_ReportWithIdExists_ReturnsUpdatedReport(){
         // arrange
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         Report reportToUpdate = new Report();
         Report requestedReport = new Report();
+        requestedReport.setWeight(69800);
+        List<Meal> meals = new ArrayList<>();
+        requestedReport.setMeals(meals);
+
         when(repository.findById(id)).thenReturn(Optional.of(reportToUpdate));
         when(repository.save(reportToUpdate)).thenAnswer(i -> i.getArguments()[0]);
 
@@ -92,15 +99,19 @@ public class ReportServiceTest {
 
         // assert
         assertEquals(reportToUpdate, result);
+
+        assertEquals(requestedReport.getWeight(), result.getWeight());
+        assertEquals(requestedReport.getMeals(), result.getMeals());
+
         verify(repository, times(1)).findById(id);
         verify(repository, times(1)).save(reportToUpdate);
     }
 
     @Test
-    @DisplayName("Test updateReport No Report With id")
-    void updateReport_NoReportWithId_ThrowsNoSuch(){
+    @DisplayName("Test updateReport throws NoSuchElementException if no report with specified id is present")
+    void updateReport_NoReportWithId_ThrowsNoSuchElementException(){
         // arrange
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         String expectedErrorMessage = "Report with Id " + id.toString() + " doesn't exist.";
         Report requestedReport = new Report();
         when(repository.findById(id)).thenReturn(Optional.empty());

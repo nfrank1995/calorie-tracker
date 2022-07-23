@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,7 +69,7 @@ public class ReportControllerTest {
         String testDateAsString = "1995-11-23";
         LocalDate testDate = LocalDate.parse(testDateAsString, dateFormatter);
 
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
 
         CalorieEntry cE1 =  new CalorieEntry();
         cE1.setAmount(3);
@@ -95,7 +96,7 @@ public class ReportControllerTest {
 
         UUID resultId = UUID.randomUUID();
         Report reportToReturn = new Report();
-        reportToReturn.setId(resultId);
+        reportToReturn.setId(resultId.toString());
 
         when(reportService.updateReport(eq(id), any(Report.class))).thenReturn(reportToReturn);
 
@@ -120,7 +121,7 @@ public class ReportControllerTest {
 
     @Test
     void updateByIDEndpoint_NoReportWithId_Returns404() throws Exception {
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString();
         String errorMessage = "404";
         NoSuchElementException exceptionToThrow = new NoSuchElementException(errorMessage);
 
@@ -133,7 +134,7 @@ public class ReportControllerTest {
         String testReportJsonString = objectMapper.writeValueAsString(testReport);
 
         MockHttpServletRequestBuilder builder =
-        MockMvcRequestBuilders.put("/reports/{id}",id.toString())
+        MockMvcRequestBuilders.put("/reports/{id}",id)
                             .characterEncoding("UTF-8")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(testReportJsonString);

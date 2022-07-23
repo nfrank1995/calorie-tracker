@@ -20,32 +20,31 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     @Transactional
-    public Report getReportForDate(@NonNull LocalDate date) {
-        
-
+    public Report getReportForDate(@NonNull LocalDate date){
         Optional<Report> reportOptional = reportRepository.findByDate(date);
 
-        if(reportOptional.isPresent()){
-            return reportOptional.get();
+
+        if(reportOptional.isEmpty()){
+           Report reportToCreate = new Report();
+           reportToCreate.setDate(date);
+           return reportRepository.save(reportToCreate);
         }
 
-        Report reportToSave = new Report();
-        reportToSave.setDate(date);
-        
-        return reportRepository.save(reportToSave);
+        return reportOptional.get();
     }
 
     @Override
-    public Report updateReport(@NonNull UUID id, @NonNull Report report) throws NoSuchElementException{
+    public Report updateReport(@NonNull String id, @NonNull Report report) throws NoSuchElementException{
         Optional<Report> repoResponse = reportRepository.findById(id);
 
         if(repoResponse.isEmpty()){
-            throw new NoSuchElementException("Report with Id " + id.toString() + " doesn't exist.");
+            throw new NoSuchElementException("Report with Id " + id + " doesn't exist.");
         }
 
-        Report reportToUpdate= repoResponse.get();
+        Report reportToUpdate = repoResponse.get();
 
-        reportToUpdate.setMeals(report.meals);
+        reportToUpdate.setMeals(report.getMeals());
+        reportToUpdate.setWeight(report.getWeight());
 
         return reportRepository.save(reportToUpdate);
     }

@@ -7,7 +7,8 @@ import java.util.UUID;
 import org.springframework.lang.NonNull;
 
 public interface ReportService {
+
     Report getReportForDate(@NonNull LocalDate date);
 
-    Report updateReport(@NonNull UUID id, @NonNull Report report) throws NoSuchElementException;
+    Report updateReport(@NonNull String id, @NonNull Report report) throws NoSuchElementException;
 }

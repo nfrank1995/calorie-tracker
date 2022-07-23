@@ -27,7 +27,7 @@ public class ReportRepositoryTest {
         LocalDate testDate = LocalDate.of(1995, 11, 23);
         LocalDate falseTestDate = LocalDate.of(2022, 11, 23);
 
-        Report testReport = new Report(reportId, testDate, null);
+        Report testReport = new Report(reportId.toString(), testDate, 67700, null);
 
         mongoTemplate.insert(testReport);
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -26,11 +27,14 @@ import lombok.ToString;
 class Report {
 
     @Id
-    UUID id;
+    String id;
+
 
     @JsonFormat(pattern="yyyy-MM-dd")
 	@JsonSerialize(using = LocalDateSerializer.class)
     LocalDate date;
+
+    int weight;
 
     List<Meal> meals;
 }

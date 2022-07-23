@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-interface ReportRepository extends MongoRepository<Report, UUID> {
+interface ReportRepository extends MongoRepository<Report, String> {
     
     Optional<Report> findByDate(LocalDate date);
 

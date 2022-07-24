@@ -19,6 +19,10 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import nfrank1995.de.calorietrackerapi.food.Category;
+import nfrank1995.de.calorietrackerapi.food.Food;
+import nfrank1995.de.calorietrackerapi.food.Unit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -71,19 +75,23 @@ public class ReportControllerTest {
 
         String id = UUID.randomUUID().toString();
 
-        CalorieEntry cE1 =  new CalorieEntry();
-        cE1.setAmount(3);
-        cE1.setKcal(102);
-        cE1.setUnit(Unit.PIECE);
-        CalorieEntry cE2 =  new CalorieEntry();
-        cE2.setAmount(500);
-        cE2.setKcal(28);
-        cE2.setUnit(Unit.GRAM);
+        Food f1 =  new Food();
+        f1.setName("bread");
+        f1 .setAmount(3);
+        f1 .setKcal(102);
+        f1.setUnit(Unit.PIECE);
+        f1.setCategory(Category.CARBOHYDRATE);
+        Food f2 =  new Food();
+        f2.setName("beans");
+        f2.setAmount(500);
+        f2.setKcal(28);
+        f2.setUnit(Unit.GRAM);
+        f2.setCategory(Category.VEGETABLE);
 
         Meal meal = new Meal();
         meal.entries = new ArrayList<>();
-        meal.entries.add(cE1);
-        meal.entries.add(cE2);
+        meal.entries.add(f1);
+        meal.entries.add(f2);
 
         List<Meal> meals = new ArrayList<>();
         meals.add(meal);

@@ -1,4 +1,5 @@
-package nfrank1995.de.calorietrackerapi.report;
+package nfrank1995.de.calorietrackerapi.food;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +10,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CalorieEntry {
-    int amount;
-    Unit unit;
+public class Food {
+    String name;
     int kcal;
+    Unit unit;
+    int amount;
+    Category category;
 }

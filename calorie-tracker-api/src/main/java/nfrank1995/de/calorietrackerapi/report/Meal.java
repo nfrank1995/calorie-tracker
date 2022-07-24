@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nfrank1995.de.calorietrackerapi.food.Food;
 
 
 @Getter
@@ -13,5 +14,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 class Meal {
-    List<CalorieEntry> entries;
+    List<Food> entries;
 }

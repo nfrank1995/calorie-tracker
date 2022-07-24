@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import com.mongodb.lang.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,8 +28,11 @@ import lombok.ToString;
 class Report {
 
     @Id
+    @NonNull
     String id;
 
+    @NonNull
+    String userId;
 
     @JsonFormat(pattern="yyyy-MM-dd")
 	@JsonSerialize(using = LocalDateSerializer.class)

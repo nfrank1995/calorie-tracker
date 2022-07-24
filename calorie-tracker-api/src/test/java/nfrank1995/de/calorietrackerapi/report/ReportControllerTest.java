@@ -74,6 +74,7 @@ public class ReportControllerTest {
         LocalDate testDate = LocalDate.parse(testDateAsString, dateFormatter);
 
         String id = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
 
         Food f1 =  new Food();
         f1.setName("bread");
@@ -89,9 +90,9 @@ public class ReportControllerTest {
         f2.setCategory(Category.VEGETABLE);
 
         Meal meal = new Meal();
-        meal.entries = new ArrayList<>();
-        meal.entries.add(f1);
-        meal.entries.add(f2);
+        meal.foods = new ArrayList<>();
+        meal.foods.add(f1);
+        meal.foods.add(f2);
 
         List<Meal> meals = new ArrayList<>();
         meals.add(meal);
@@ -99,6 +100,7 @@ public class ReportControllerTest {
         Report testReport = new Report();
         testReport.setDate(testDate);
         testReport.setId(id);
+        testReport.setUserId(userId);
         testReport.setMeals(meals);
 
 
@@ -129,20 +131,24 @@ public class ReportControllerTest {
 
     @Test
     void updateByIDEndpoint_NoReportWithId_Returns404() throws Exception {
-        String id = UUID.randomUUID().toString();
+        String requestedId = UUID.randomUUID().toString();
+        String reportId = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
         String errorMessage = "404";
         NoSuchElementException exceptionToThrow = new NoSuchElementException(errorMessage);
 
         Report testReport = new Report();
+        testReport.setId(reportId);
+        testReport.setUserId(userId);
 
-        when(reportService.updateReport(eq(id), any(Report.class))).thenThrow(exceptionToThrow);
+        when(reportService.updateReport(eq(requestedId), any(Report.class))).thenThrow(exceptionToThrow);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
         String testReportJsonString = objectMapper.writeValueAsString(testReport);
 
         MockHttpServletRequestBuilder builder =
-        MockMvcRequestBuilders.put("/reports/{id}",id)
+        MockMvcRequestBuilders.put("/reports/{id}",requestedId)
                             .characterEncoding("UTF-8")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(testReportJsonString);
@@ -152,6 +158,6 @@ public class ReportControllerTest {
         .andDo(print())
         .andExpect(status().isNotFound());
 
-        verify(reportService, times(1)).updateReport(eq(id), any(Report.class));
+        verify(reportService, times(1)).updateReport(eq(requestedId), any(Report.class));
     }
 }

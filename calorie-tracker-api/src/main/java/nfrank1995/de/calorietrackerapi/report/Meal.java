@@ -14,5 +14,5 @@ import nfrank1995.de.calorietrackerapi.food.Food;
 @AllArgsConstructor
 @NoArgsConstructor
 class Meal {
-    List<Food> entries;
+    List<Food> foods;
 }
